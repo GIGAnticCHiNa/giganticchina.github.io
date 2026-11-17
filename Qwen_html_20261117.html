@@ -1,0 +1,47 @@
+<div style="padding: 20px; border: 1px solid #d9d9d9; border-radius: 8px; background-color: #f9f9f9; font-family: sans-serif;">
+    <p id="copyText" style="margin-bottom: 15px; color: #333;">输入文字</p>
+    <button onclick="copyToClipboard()" style="background-color: #00b96b; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">
+        一键复制
+    </button>
+    <span id="statusMsg" style="margin-left: 10px; color: #00b96b; font-size: 14px;"></span>
+</div>
+
+<script>
+function copyToClipboard() {
+    // 获取预设的文字内容
+    var text = document.getElementById("copyText").innerText;
+    
+    // 使用现代浏览器的剪贴板 API
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function() {
+            showStatus("✅ 复制成功");
+        }).catch(function(err) {
+            showStatus("❌ 复制失败");
+        });
+    } else {
+        // 兼容旧版浏览器的降级方案
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showStatus("✅ 复制成功");
+        } catch (err) {
+            showStatus("❌ 复制失败");
+        }
+        document.body.removeChild(textArea);
+    }
+}
+
+function showStatus(msg) {
+    var status = document.getElementById("statusMsg");
+    status.innerText = msg;
+    // 2秒后自动清除提示
+    setTimeout(function() {
+        status.innerText = "";
+    }, 2000);
+}
+</script>
+
+
